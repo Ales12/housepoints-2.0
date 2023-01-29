@@ -587,6 +587,7 @@ function housepoints_misc()
                 FROM " . TABLE_PREFIX . "users 
                 WHERE (as_uid = $this_user) 
                 OR (uid = $this_user) 
+                 and not usergroup = '2'
                 ORDER BY username ASC");
             } else if ($as_uid != 0) {
 //id des users holen wo alle angehangen sind
@@ -595,6 +596,7 @@ function housepoints_misc()
                 WHERE (as_uid = $as_uid) 
                 OR (uid = $this_user) 
                 OR (uid = $as_uid)    
+                and not usergroup = '2'
                 ORDER BY username ASC");
             }
 
@@ -736,7 +738,7 @@ function houspoints_newthread()
     $uid = $mybb->user['uid'];
     //Inplaykategorie
     $ip_id = $mybb->settings['housepoints_setting_inplay'];
-
+    
     //Punkte
     $postpoints = $mybb->settings['housepoints_setting_postcountpoints'];
     $postcharsextra = $mybb->settings['housepoints_setting_postcountnumberextranumber'];
@@ -746,7 +748,7 @@ function houspoints_newthread()
 
     $housepoints = 0;
 
-    if(preg_match("/$ip_id,/i", $forum['parentlist'])) {
+    if(preg_match("/,$ip_id,/i", $forum['parentlist'])){
 
         $message = $mybb->get_input('message');
         $messengelength = strlen($message);
@@ -818,7 +820,7 @@ function houspoints_reply()
 
     $housepoints = 0;
 
-    if(preg_match("/$ip_id,/i", $forum['parentlist'])) {
+    if(preg_match("/,$ip_id,/i", $forum['parentlist'])){
 
         $message = $mybb->get_input('message');
         $messengelength = strlen($message);
@@ -991,7 +993,7 @@ function housepoints_modcp()
                     MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
                 }
             }
-            $db->delete_query("housepoints", "hp_id = '".$refuseoffer."'");
+
 
             redirect ("modcp.php?action=housepoints");
         }
@@ -1042,14 +1044,25 @@ function housepoints_modcp()
 
             $username = format_name ($row['username'], $row['usergroup'], $row['displaygroup']);
             $charaname = build_profile_link ($username, $row['uid']);
+            $uid = $row['uid'];
 
             // Infos auslesen
             $hp_reason = $row['hp_reason'];
             $hp_points = $row['hp_points']. " Hauspunkte";
             $hp_link = "<a href='{$row['hp_link']}'>{$lang->hp_modcp_link}</a>";
-            $delete_entry = "<a href='modcp.php?action=housepoints?delete_entry={$row['hp_id']}'>{$lang->hp_modcp_deleteentry}</a>";
+            $delete_entry = "<a href='modcp.php?action=housepoints&delete_entry={$row['hp_id']}&uid={$uid}&housepoints={$row['hp_points']}'>{$lang->hp_modcp_deleteentry}</a>";
 
             eval("\$hp_modcp_charas_protocol .= \"".$templates->get("hp_modcp_charas_protocol")."\";");
+        }
+
+        $delete_entry = $mybb->input['delete_entry'];
+
+        if($delete_entry){
+            $uid = $mybb->input['uid'];
+            $housepoints = $mybb->input['housepoints'];
+            $db->query("UPDATE " . TABLE_PREFIX . "users SET user_hp = user_hp - '" . $housepoints . "'  WHERE uid = '" . $uid . "'");
+            $db->delete_query("housepoints", "hp_id = '".$delete_entry."'");
+            redirect ("modcp.php?action=housepoints");
         }
 
         // Using the misc_help template for the page wrapper
