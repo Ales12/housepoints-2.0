@@ -994,7 +994,7 @@ function housepoints_modcp()
                 }
             }
 
-
+                     $db->delete_query("housepoints", "hp_id = '".$refuseoffer."'");
             redirect ("modcp.php?action=housepoints");
         }
 
