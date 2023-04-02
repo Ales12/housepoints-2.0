@@ -39,6 +39,6 @@ $l['hp_profile'] = "Hauspunkte:";
 
 // Alerts
 $l['hp_accepted'] = "{1} hat deine Anfrage angenommen. Deine Hauspunkteanfrage von <i>{3} Punkte</i> für <b>{2}</b> wurden dir gutgeschrieben.";
-$l['hp_rejected'] = "{1} hat Anfrage für Hauspunkte abgelehnt. Bitte setze dich mit dem Teammitglied in verbindung, um den Grund zu erfahren.";
+$l['hp_rejected'] = "{1} hat deine Anfrage für Hauspunkte abgelehnt. Bitte setze dich mit dem Teammitglied in verbindung, um den Grund zu erfahren.";
 $l['myalerts_setting_hp_accepted'] = "Benachrichtung, wenn deine Hauspunkte akzeptiert wurden?";
 $l['myalerts_setting_hp_rejected'] = "Benachrichtung, wenn deine Hauspunkte abgelehnt wurden?";
